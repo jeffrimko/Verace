@@ -1,6 +1,6 @@
 Verace Changelog
 ================
-## verace-0.1.0 (TODO)
+## verace-0.1.0 (2015-07-18)
 ### Release highlights
   - First release.
 
