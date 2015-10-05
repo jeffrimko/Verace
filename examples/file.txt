@@ -1,4 +1,4 @@
-Hello world!
 version = 0.1.0
-One more: 
 another = 0.1.0
+onemore : 0.1.0
+diffver = v0.1.1
