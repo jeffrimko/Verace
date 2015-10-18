@@ -8,6 +8,7 @@
 ## SECTION: Imports                                             #
 ##==============================================================#
 
+import copy
 import os.path as op
 from collections import namedtuple
 
@@ -16,7 +17,7 @@ from collections import namedtuple
 ##==============================================================#
 
 #: Library version string.
-__version__ = "0.2.0-alpha"
+__version__ = "0.2.0"
 
 #: Contains version information for a single checked item.
 VerInfo = namedtuple("VerInfo", "path linenum string")
@@ -44,7 +45,7 @@ class VerChecker(object):
         """Returns the version string if `run()` found no inconsistencies,
         otherwise None is returned."""
         return self._string
-    def include(self, path, func=None, opts={}, **kwargs):
+    def include(self, path, func=None, opts=None, **kwargs):
         """Includes a file to check.
 
         **Params**:
@@ -54,11 +55,14 @@ class VerChecker(object):
           - opts (dict) - Options to pass to the check function. Any additional
             key word args will be included.
         """
-        opts.update(kwargs)
+        if not opts:
+            opts = {}
+        opts.update(copy.deepcopy(kwargs))
         if not func:
             func = check_basic
-        self._checks.append((path, func, opts))
-    def run(self, verbose=True):
+        c = (path, func, copy.deepcopy(opts))
+        self._checks.append(c)
+    def run(self, verbose=True, debug=False):
         """Runs checks on all included items, reports any inconsistencies."""
         vprint = get_vprint(verbose)
         self._vinfos = []
@@ -69,16 +73,20 @@ class VerChecker(object):
             if not op.isabs(path):
                 path = op.join(self.root, path)
             path = op.normpath(path)
-            self._vinfos.extend(c[1](path, c[2]))
+            self._vinfos.extend(c[1](path, **c[2]))
         for vinfo in self._vinfos:
             vprint("  `%s` (%s:%u)" % (
                     vinfo.string,
                     op.relpath(vinfo.path),
                     vinfo.linenum))
         strings = set([v.string for v in self._vinfos])
-        self._string = list(strings)[0] if 1 == len(strings) else None
-        if not self._string:
-            vprint("  [!] WARNING: Version numbers differ!")
+        if strings:
+            self._string = list(strings)[0] if 1 == len(strings) else None
+            if not self._string:
+                vprint("  [!] WARNING: Version info differs!")
+        else:
+            self._string = None
+            vprint("  [!] WARNING: No version info found!")
         return self._string
 
 ##==============================================================#
@@ -98,13 +106,13 @@ def get_vprint(verbose):
         return _vprint
     return _nprint
 
-def check_basic(path, opts):
+def check_basic(path, match="version", delim="=", delim2=""):
     """Basic version check function."""
     for num,line in enumerate(open(path).readlines()):
-        if line.find(opts['match']) > -1:
-            ver = line.split(opts['delim'])[1].strip()
-            if 'delim2' in opts.keys():
-                ver = ver.split(opts['delim2'])[0].strip()
+        if line.find(match) > -1:
+            ver = line.split(delim)[1].strip()
+            if delim2:
+                ver = ver.split(delim2)[0].strip()
             return [VerInfo(path, num+1, ver)]
 
 ##==============================================================#

@@ -1,0 +1,30 @@
+= Verace
+
+== Introduction
+This project provides a Python 2.x library for creating scripts that check version strings. The main features are the following:
+
+  - Custom parse any project files for version strings.
+  - Easily determine if all version strings in a project are consistent.
+  - Should work on any platform without additional dependencies.
+
+== Status
+Currently, this project is **under active development**. The contents of the repository should be considered unstable during active development.
+
+== Requirements
+Verace should run on any Python 2.x interpreter without additional dependencies.
+
+== Installation
+Verace can be installed with pip using the following command: `pip install verace`
+
+Additional, Verace can be installed from source by running: `python setup.py install`
+
+== Usage
+The following are basic examples of Verace (all examples can be found https://github.com/jeffrimko/Verace/tree/master/examples[here]):
+
+  - https://github.com/jeffrimko/Verace/blob/master/examples/check_1.py[`examples/check_1.py`] - Basic version checking.
+  - https://github.com/jeffrimko/Verace/blob/master/examples/check_2.py[`examples/check_2.py`] - Basic version checking.
+
+== FAQ
+How is **Verace** pronounced?
+
+  - "ver-AH-che" - Italian word for "truthful/accurate".
