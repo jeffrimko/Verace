@@ -1,5 +1,15 @@
 = Verace Changelog
 
+== verace-0.2.3 (2015-10-19)
+=== Release highlights
+  - Minor changes for PyPI distribution.
+
+=== All additions and changes
+Not applicable.
+
+=== Bug fixes
+Not applicable.
+
 == verace-0.2.0 (2015-10-18)
 === Release highlights
   - Significant change to library design, now using functions instead of class methods to check version strings.

@@ -21,8 +21,8 @@ Additional, Verace can be installed from source by running: `python setup.py ins
 == Usage
 The following are basic examples of Verace (all examples can be found https://github.com/jeffrimko/Verace/tree/master/examples[here]):
 
-  - https://github.com/jeffrimko/Verace/blob/master/examples/check_1.py[`examples/check_1.py`] - Basic version checking.
-  - https://github.com/jeffrimko/Verace/blob/master/examples/check_2.py[`examples/check_2.py`] - Basic version checking.
+  - https://github.com/jeffrimko/Verace/blob/master/examples/check_1.py[examples/check_1.py] - Basic version checking.
+  - https://github.com/jeffrimko/Verace/blob/master/examples/check_2.py[examples/check_2.py] - Basic version checking.
 
 == FAQ
 How is **Verace** pronounced?

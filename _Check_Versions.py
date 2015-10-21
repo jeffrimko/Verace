@@ -18,5 +18,5 @@ VERCHK.include(r"CHANGELOG.adoc", match="verace-", delim="-", delim2=" ")
 ##==============================================================#
 
 if __name__ == '__main__':
-    print VERCHK.run()
+    VERCHK.run()
     raw_input("Press ENTER to continue...")
