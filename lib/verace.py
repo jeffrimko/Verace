@@ -17,7 +17,7 @@ from collections import namedtuple
 ##==============================================================#
 
 #: Library version string.
-__version__ = "0.2.3"
+__version__ = "0.2.4"
 
 #: Contains version information for a single checked item.
 VerInfo = namedtuple("VerInfo", "path linenum string")
@@ -36,8 +36,8 @@ class VerChecker(object):
             files. Can be a file or directory."""
         self.name = name
         if op.isfile(root):
-            self.root = op.dirname(root)
-        self.root = op.abspath(self.root)
+            root = op.dirname(root)
+        self.root = op.abspath(root)
         self._vinfos = []
         self._checks = []
         self._string = None

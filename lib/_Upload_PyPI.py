@@ -26,7 +26,10 @@ if __name__ == '__main__':
             subprocess.call("asciidoc -b docbook ../README.adoc", shell=True)
             subprocess.call("pandoc -r docbook -w rst -o README.rst ../README.xml", shell=True)
             os.remove("../README.xml")
-            subprocess.call("python setup.py sdist upload", shell=True)
-            os.remove("README.rst")
+            if os.path.exists("README.rst"):
+                subprocess.call("python setup.py sdist upload", shell=True)
+                os.remove("README.rst")
+            else:
+                qprompt.alert("Readme not generated properly!")
     else:
         qprompt.alert("Issue with version info!")
