@@ -1,5 +1,16 @@
 = Verace Changelog
 
+== verace-0.2.4 (2015-10-21)
+=== Release highlights
+  - Fixed bug related to passing directory as `root` parameter to `VerChecker`.
+  - Minor update to PyPI upload script.
+
+=== All additions and changes
+Not applicable.
+
+=== Bug fixes
+Not applicable.
+
 == verace-0.2.3 (2015-10-19)
 === Release highlights
   - Minor changes for PyPI distribution.
