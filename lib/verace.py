@@ -9,6 +9,7 @@
 ##==============================================================#
 
 import copy
+import os
 import os.path as op
 from collections import namedtuple
 
@@ -17,7 +18,7 @@ from collections import namedtuple
 ##==============================================================#
 
 #: Library version string.
-__version__ = "0.2.4"
+__version__ = "0.2.5"
 
 #: Contains version information for a single checked item.
 VerInfo = namedtuple("VerInfo", "path linenum string")
@@ -88,6 +89,22 @@ class VerChecker(object):
             self._string = None
             vprint("  [!] WARNING: No version info found!")
         return self._string
+    def update(self, newver):
+        """Updates all associated version strings to the given new string. Use
+        caution as this will modify file content!"""
+        self.run(verbose=False)
+        for vi in self._vinfos:
+            with open(vi.path) as fi:
+                temp = op.join(
+                        op.dirname(vi.path),
+                        "__temp-verace-" + op.basename(vi.path))
+                with open(temp, "w") as fo:
+                    for num,line in enumerate(fi.readlines(), 1):
+                        if num == vi.linenum:
+                            line = line.replace(vi.string, newver)
+                        fo.write(line)
+            os.remove(vi.path)
+            os.rename(temp, vi.path)
 
 ##==============================================================#
 ## SECTION: Function Definitions                                #

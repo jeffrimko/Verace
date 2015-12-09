@@ -1,5 +1,15 @@
 = Verace Changelog
 
+== verace-0.2.5 (2015-12-08)
+=== Release highlights
+  - Added convenience function.
+
+=== All additions and changes
+  - Added `update()` method to allow version strings in files to be updated.
+
+=== Bug fixes
+Not applicable.
+
 == verace-0.2.4 (2015-10-21)
 === Release highlights
   - Fixed bug related to passing directory as `root` parameter to `VerChecker`.
