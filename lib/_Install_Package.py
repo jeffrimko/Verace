@@ -2,21 +2,26 @@
 ## SECTION: Imports                                             #
 ##==============================================================#
 
-from verace import VerChecker, VerInfo
+import os
+import subprocess
 
 ##==============================================================#
-## SECTION: Global Definitions                                  #
+## SECTION: Function Definitions                                #
 ##==============================================================#
 
-VERCHK = VerChecker("Verace", __file__)
-VERCHK.include(r"lib\setup.py", opts={'match':"version = ", 'delim':'"'})
-VERCHK.include(r"lib\verace.py", match="__version__ = ", delim='"')
-VERCHK.include(r"CHANGELOG.adoc", match="verace-", delim="-", delim2=" ", updatable=False)
+def generate_readme():
+    subprocess.call("asciidoc -b docbook ../README.adoc", shell=True)
+    subprocess.call("pandoc -r docbook -w rst -o README.rst ../README.xml", shell=True)
+    os.remove("../README.xml")
+
+def cleanup_readme():
+    os.remove("README.rst")
 
 ##==============================================================#
 ## SECTION: Main Body                                           #
 ##==============================================================#
 
 if __name__ == '__main__':
-    VERCHK.run()
-    raw_input("Press ENTER to continue...")
+    generate_readme()
+    subprocess.call("python setup.py install", shell=True)
+    cleanup_readme()

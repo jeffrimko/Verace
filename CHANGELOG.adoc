@@ -1,11 +1,12 @@
 = Verace Changelog
 
-== verace-0.2.5 (2015-12-08)
+== verace-0.2.5 (2015-12-10)
 === Release highlights
   - Added convenience function.
 
 === All additions and changes
   - Added `update()` method to allow version strings in files to be updated.
+  - Added `updatable` parameter to `include()` for selectable updating.
 
 === Bug fixes
 Not applicable.

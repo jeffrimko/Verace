@@ -46,7 +46,7 @@ class VerChecker(object):
         """Returns the version string if `run()` found no inconsistencies,
         otherwise None is returned."""
         return self._string
-    def include(self, path, func=None, opts=None, **kwargs):
+    def include(self, path, func=None, opts=None, updatable=True, **kwargs):
         """Includes a file to check.
 
         **Params**:
@@ -55,32 +55,41 @@ class VerChecker(object):
             `path` and `opts`. Must return a list of VerInfo items.
           - opts (dict) - Options to pass to the check function. Any additional
             key word args will be included.
+          - updatable (bool) - If true, string can be updated using `update()`.
         """
         if not opts:
             opts = {}
         opts.update(copy.deepcopy(kwargs))
         if not func:
             func = check_basic
-        c = (path, func, copy.deepcopy(opts))
+        c = (path, func, copy.deepcopy(opts), updatable)
         self._checks.append(c)
-    def run(self, verbose=True, debug=False):
-        """Runs checks on all included items, reports any inconsistencies."""
-        vprint = get_vprint(verbose)
-        self._vinfos = []
-        vprint("%s Version Information:" % (self.name))
-        # Execute checks and update version information list.
+    def iter_vinfo(self, get_updatable=False):
+        """Iterates over the associated VerInfo objects. Optionally returns if
+        the associated file is updatable."""
         for c in self._checks:
             path = c[0]
             if not op.isabs(path):
                 path = op.join(self.root, path)
             path = op.normpath(path)
-            self._vinfos.extend(c[1](path, **c[2]))
-        for vinfo in self._vinfos:
+            vinfos = c[1](path, **c[2])
+            if list != type(vinfos):
+                vinfos = [vinfos]
+            for vi in vinfos:
+                yield (vi, c[3]) if get_updatable else vi
+    def run(self, verbose=True):
+        """Runs checks on all included items, reports any inconsistencies.
+        Returns version string if consistent else None."""
+        vprint = get_vprint(verbose)
+        strings = []
+        vprint("%s Version Information:" % (self.name))
+        for vinfo in self.iter_vinfo():
+            if vinfo.string not in strings:
+                strings.append(vinfo.string)
             vprint("  `%s` (%s:%u)" % (
                     vinfo.string,
                     op.relpath(vinfo.path),
                     vinfo.linenum))
-        strings = set([v.string for v in self._vinfos])
         if strings:
             self._string = list(strings)[0] if 1 == len(strings) else None
             if not self._string:
@@ -91,20 +100,25 @@ class VerChecker(object):
         return self._string
     def update(self, newver):
         """Updates all associated version strings to the given new string. Use
-        caution as this will modify file content!"""
-        self.run(verbose=False)
-        for vi in self._vinfos:
-            with open(vi.path) as fi:
+        caution as this will modify file content! Returns number of strings
+        updated."""
+        updated = 0
+        for vinfo,updatable in self.iter_vinfo(get_updatable=True):
+            if not updatable:
+                continue
+            with open(vinfo.path) as fi:
                 temp = op.join(
-                        op.dirname(vi.path),
-                        "__temp-verace-" + op.basename(vi.path))
+                        op.dirname(vinfo.path),
+                        "__temp-verace-" + op.basename(vinfo.path))
                 with open(temp, "w") as fo:
                     for num,line in enumerate(fi.readlines(), 1):
-                        if num == vi.linenum:
-                            line = line.replace(vi.string, newver)
+                        if num == vinfo.linenum:
+                            line = line.replace(vinfo.string, newver)
                         fo.write(line)
-            os.remove(vi.path)
-            os.rename(temp, vi.path)
+            os.remove(vinfo.path)
+            os.rename(temp, vinfo.path)
+            updated += 1
+        return updated
 
 ##==============================================================#
 ## SECTION: Function Definitions                                #
@@ -130,7 +144,7 @@ def check_basic(path, match="version", delim="=", delim2=""):
             ver = line.split(delim)[1].strip()
             if delim2:
                 ver = ver.split(delim2)[0].strip()
-            return [VerInfo(path, num+1, ver)]
+            return VerInfo(path, num+1, ver)
 
 ##==============================================================#
 ## SECTION: Main Body                                           #
