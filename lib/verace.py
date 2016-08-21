@@ -46,7 +46,8 @@ class VerChecker(object):
         self._string = None
     def string(self):
         """Returns the version string if `run()` found no inconsistencies,
-        otherwise None is returned."""
+        otherwise None is returned. Always calls `run()`."""
+        self.run(False)
         return self._string
     def include(self, path, func=None, opts=None, updatable=True, **kwargs):
         """Includes a file to check.
@@ -62,7 +63,7 @@ class VerChecker(object):
         if not opts:
             opts = {}
         opts.update(copy.deepcopy(kwargs))
-        if not func:
+        if (not func) or (not hasattr(func, "__call__")):
             func = check_basic
         c = (path, func, copy.deepcopy(opts), updatable)
         self._checks.append(c)
@@ -153,6 +154,4 @@ def check_basic(path, match="version", delim="=", delim2=""):
 ##==============================================================#
 
 if __name__ == '__main__':
-    vprint = get_vprint(True)
-    vprint("hello", end=" ")
-    vprint("hello")
+    pass
