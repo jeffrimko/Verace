@@ -1,5 +1,7 @@
 = Verace
 
+image:http://img.shields.io/:license-mit-blue.svg["License", link="https://github.com/jeffrimko/Qprompt/blob/master/LICENSE"]
+
 == Introduction
 This project provides a Python 2.x library for creating scripts that check version strings. The main features are the following:
 
@@ -23,6 +25,12 @@ The following are basic examples of Verace (all examples can be found https://gi
 
   - https://github.com/jeffrimko/Verace/blob/master/examples/check_1.py[examples/check_1.py] - Basic version checking.
   - https://github.com/jeffrimko/Verace/blob/master/examples/check_2.py[examples/check_2.py] - Basic version checking.
+
+Here are some real-world examples of Verace in action:
+
+  - https://github.com/jeffrimko/Auxly/blob/master/_Check_Versions.py[Auxly]
+  - https://github.com/jeffrimko/Qprompt/blob/master/_Check_Versions.py[Qprompt]
+  - https://github.com/jeffrimko/Verace/blob/master/_Check_Versions.py[Verace (meta)]
 
 == FAQ
 How is **Verace** pronounced?
