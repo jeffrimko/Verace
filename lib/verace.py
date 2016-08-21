@@ -1,12 +1,14 @@
 """Library for checking version strings in files."""
 
 ##==============================================================#
-## DEVELOPED 2015, REVISED 2015, Jeff Rimko.                    #
+## DEVELOPED 2015, REVISED 2016, Jeff Rimko.                    #
 ##==============================================================#
 
 ##==============================================================#
 ## SECTION: Imports                                             #
 ##==============================================================#
+
+from __future__ import print_function
 
 import copy
 import os
@@ -18,7 +20,7 @@ from collections import namedtuple
 ##==============================================================#
 
 #: Library version string.
-__version__ = "0.2.5"
+__version__ = "0.3.0-alpha"
 
 #: Contains version information for a single checked item.
 VerInfo = namedtuple("VerInfo", "path linenum string")
@@ -126,11 +128,11 @@ class VerChecker(object):
 
 def get_vprint(verbose):
     """Helper function for optional verbose printing."""
-    def _vprint(msg, endl=True):
-        if endl:
-            print msg
+    def _vprint(msg, end=None):
+        if None != end:
+            print(msg, end=end)
         else:
-            print msg,
+            print(msg)
     def _nprint(msg, endl=True):
         pass
     if verbose:
@@ -151,4 +153,6 @@ def check_basic(path, match="version", delim="=", delim2=""):
 ##==============================================================#
 
 if __name__ == '__main__':
-    pass
+    vprint = get_vprint(True)
+    vprint("hello", end=" ")
+    vprint("hello")
