@@ -1,6 +1,7 @@
 = Verace
 
-image:http://img.shields.io/:license-mit-blue.svg["License", link="https://github.com/jeffrimko/Qprompt/blob/master/LICENSE"]
+image:http://img.shields.io/:license-mit-blue.svg["License", link="https://github.com/jeffrimko/Verace/blob/master/LICENSE"]
+image:https://travis-ci.org/jeffrimko/Verace.svg?branch=master["Build Status"]
 
 == Introduction
 This project provides a Python 2.x library for creating scripts that check version strings. The main features are the following:
