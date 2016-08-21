@@ -4,7 +4,7 @@ image:http://img.shields.io/:license-mit-blue.svg["License", link="https://githu
 image:https://travis-ci.org/jeffrimko/Verace.svg?branch=master["Build Status"]
 
 == Introduction
-This project provides a Python 2.x library for creating scripts that check version strings. The main features are the following:
+This project provides a Python 2.7/3.x library for creating scripts that check version strings. The main features are the following:
 
   - Custom parse any project files for version strings.
   - Easily determine if all version strings in a project are consistent.
