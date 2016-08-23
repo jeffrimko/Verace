@@ -2,7 +2,7 @@
 ## SECTION: Imports                                             #
 ##==============================================================#
 
-from verace import VerChecker, VerInfo
+from verace import VerChecker, VerInfo, show_prompt
 
 ##==============================================================#
 ## SECTION: Global Definitions                                  #
@@ -18,5 +18,4 @@ VERCHK.include(r"CHANGELOG.adoc", match="verace-", delim="-", delim2=" ", updata
 ##==============================================================#
 
 if __name__ == '__main__':
-    VERCHK.run()
-    raw_input("Press ENTER to continue...")
+    show_prompt(VERCHK)

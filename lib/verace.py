@@ -96,10 +96,10 @@ class VerChecker(object):
         if strings:
             self._string = list(strings)[0] if 1 == len(strings) else None
             if not self._string:
-                vprint("  [!] WARNING: Version info differs!")
+                vprint("  [WARNING] Version info differs!")
         else:
             self._string = None
-            vprint("  [!] WARNING: No version info found!")
+            vprint("  [WARNING] No version info found!")
         return self._string
     def update(self, newver):
         """Updates all associated version strings to the given new string. Use
@@ -148,6 +148,18 @@ def check_basic(path, match="version", delim="=", delim2=""):
             if delim2:
                 ver = ver.split(delim2)[0].strip()
             return VerInfo(path, num+1, ver)
+
+def show_prompt(verchk, pause=True):
+    """Shows the standard prompt for handling version numbers in a project."""
+    import qprompt
+    verchk.run()
+    if qprompt.ask_yesno("Update version?", dft="n"):
+        newver = qprompt.ask_str("New version string")
+        if newver:
+            verchk.update(newver)
+            verchk.run()
+            if pause:
+                qprompt.pause()
 
 ##==============================================================#
 ## SECTION: Main Body                                           #
