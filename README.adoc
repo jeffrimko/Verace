@@ -22,16 +22,23 @@ Verace can be installed with pip using the following command: `pip install verac
 Additional, Verace can be installed from source by running: `python setup.py install`
 
 == Usage
-The following are basic examples of Verace (all examples can be found https://github.com/jeffrimko/Verace/tree/master/examples[here]):
+The following is an example of basic usage:
 
-  - https://github.com/jeffrimko/Verace/blob/master/examples/check_1.py[examples/check_1.py] - Basic version checking.
-  - https://github.com/jeffrimko/Verace/blob/master/examples/check_2.py[examples/check_2.py] - Basic version checking.
+    from verace import VerChecker, show_prompt
+    VERCHK = VerChecker("MyProject", __file__)
+    VERCHK.include(r"my_file.txt")
+    show_prompt(VERCHK)
 
 Here are some real-world examples of Verace in action:
 
   - https://github.com/jeffrimko/Auxly/blob/master/_Check_Versions.py[Auxly]
   - https://github.com/jeffrimko/Qprompt/blob/master/_Check_Versions.py[Qprompt]
   - https://github.com/jeffrimko/Verace/blob/master/_Check_Versions.py[Verace (meta)]
+
+A few more basic examples of Verace (all examples can be found https://github.com/jeffrimko/Verace/tree/master/examples[here]):
+
+  - https://github.com/jeffrimko/Verace/blob/master/examples/check_1.py[examples/check_1.py] - Basic version checking.
+  - https://github.com/jeffrimko/Verace/blob/master/examples/check_2.py[examples/check_2.py] - Basic version checking.
 
 == FAQ
 How is **Verace** pronounced?
