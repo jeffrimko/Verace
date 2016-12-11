@@ -1,4 +1,4 @@
-= Verace
+= image:doc\logo\verace.png[Verace]
 
 image:http://img.shields.io/:license-mit-blue.svg["License", link="https://github.com/jeffrimko/Verace/blob/master/LICENSE"]
 image:https://travis-ci.org/jeffrimko/Verace.svg?branch=master["Build Status"]
