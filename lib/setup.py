@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = "verace",
-    version = "0.3.0-alpha2",
+    version = "0.3.0",
     author = "Jeff Rimko",
     author_email = "jeffrimko@gmail.com",
     description = "Library for checking version strings in project files.",

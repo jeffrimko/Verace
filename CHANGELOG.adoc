@@ -1,5 +1,17 @@
 = Verace Changelog
 
+== verace-0.3.0 (2017-02-16)
+=== Release highlights
+  - Added convenience function.
+  - Some breaking API changes.
+
+=== All additions and changes
+  - Added `prompt()` method to allow version strings in files to be updated.
+  - Changed function signature of `check_basic()`, now uses `splits` argument.
+
+=== Bug fixes
+Not applicable.
+
 == verace-0.2.5 (2015-12-10)
 === Release highlights
   - Added convenience function.

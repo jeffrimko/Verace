@@ -20,7 +20,7 @@ from collections import namedtuple
 ##==============================================================#
 
 #: Library version string.
-__version__ = "0.3.0-alpha2"
+__version__ = "0.3.0"
 
 #: Contains information for a single checked item.
 VerInfo = namedtuple("VerInfo", "path linenum string")

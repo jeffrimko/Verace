@@ -49,7 +49,7 @@ Get the string found by the checker:
 [source,python]
 --------
 print("version found = " + mychk.string())
-# version found = 0.3.0-alpha2
+# version found = 0.3.0
 --------
 
 The string can be updated in all associated files:
