@@ -59,7 +59,7 @@ The string can be updated in all associated files:
 mychk.update("something different!")
 --------
 
-That's the basics but there is a lot more. Custom functions can be provided to
+That's the basics.
 
 Here are some real-world examples of Verace in action:
 

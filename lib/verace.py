@@ -25,6 +25,9 @@ __version__ = "0.3.0-alpha2"
 #: Contains information for a single checked item.
 VerInfo = namedtuple("VerInfo", "path linenum string")
 
+#: Defines a file check.
+VerCheck = namedtuple("VerCheck", "path func opts updatable")
+
 ##==============================================================#
 ## SECTION: Class Definitions                                   #
 ##==============================================================#
@@ -42,8 +45,8 @@ class VerChecker(object):
             root = op.dirname(root)
         self.root = op.abspath(root)
         self._vinfos = []
-        self._checks = []
         self._string = None
+        self._checks = []
     def string(self):
         """Returns the string if `run()` found no inconsistencies,
         otherwise None is returned. Always calls `run()`."""
@@ -55,9 +58,9 @@ class VerChecker(object):
         **Params**:
           - path (str) - Path to a file to check.
           - func (function) - Function that performs check will be passed
-            `path` and `opts`. Must return a list of VerInfo items.
+            `path` and `opts`. Must return a VerInfo (single or list).
           - opts (dict) - Options to pass to the check function. Any additional
-            key word args will be included.
+            keyword args will be included.
           - updatable (bool) - If true, string can be updated using `update()`.
         """
         if not opts:
@@ -65,21 +68,21 @@ class VerChecker(object):
         opts.update(copy.deepcopy(kwargs))
         if (not func) or (not hasattr(func, "__call__")):
             func = check_basic
-        c = (path, func, copy.deepcopy(opts), updatable)
+        c = VerCheck(path, func, copy.deepcopy(opts), updatable)
         self._checks.append(c)
     def iter_vinfo(self, get_updatable=False):
         """Iterates over the associated VerInfo objects. Optionally returns if
         the associated file is updatable."""
         for c in self._checks:
-            path = c[0]
+            path = c.path
             if not op.isabs(path):
                 path = op.join(self.root, path)
             path = op.normpath(path)
-            vinfos = c[1](path, **c[2])
+            vinfos = c.func(path, **c.opts)
             if list != type(vinfos):
                 vinfos = [vinfos]
             for vi in vinfos:
-                yield (vi, c[3]) if get_updatable else vi
+                yield (vi, c.updatable) if get_updatable else vi
     def run(self, verbose=True):
         """Runs checks on all included items, reports any inconsistencies.
         Returns string if consistent else None."""
@@ -149,13 +152,17 @@ def get_vprint(verbose):
         return _vprint
     return _nprint
 
-def check_basic(path, match="version", delim="=", delim2="", splitnum=1, splitnum2=0):
-    """Basic check function."""
+def check_basic(path, match="version", splits=None):
+    """Basic check function. Iterates through files lines until the `match`
+    string is found. The matching line will be split using the list of
+    (characters,index) tuples/lists from `splits`. **NOTE**: `splits` must be a
+    list of tuples/lists!"""
+    splits = splits or []
     for num,line in enumerate(open(path).readlines(), 1):
         if line.find(match) > -1:
-            vstr = line.split(delim)[splitnum].strip()
-            if delim2:
-                vstr = vstr.split(delim2)[splitnum2].strip()
+            vstr = line
+            for char,indx in splits:
+                vstr = vstr.split(char)[indx].strip()
             return VerInfo(path, num, vstr)
 
 ##==============================================================#
@@ -164,5 +171,5 @@ def check_basic(path, match="version", delim="=", delim2="", splitnum=1, splitnu
 
 if __name__ == '__main__':
     mychk = VerChecker("My Checker", __file__)
-    mychk.include(r"setup.py", match="version = ", delim='"')
+    mychk.include(r"setup.py", match="version = ", splits=[('"', 1)])
     mychk.prompt()
