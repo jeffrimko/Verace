@@ -1,7 +1,7 @@
-"""Library for checking version strings in files."""
+"""Library for checking strings in files."""
 
 ##==============================================================#
-## DEVELOPED 2015, REVISED 2016, Jeff Rimko.                    #
+## DEVELOPED 2015, REVISED 2017, Jeff Rimko.                    #
 ##==============================================================#
 
 ##==============================================================#
@@ -20,9 +20,9 @@ from collections import namedtuple
 ##==============================================================#
 
 #: Library version string.
-__version__ = "0.3.0-alpha"
+__version__ = "0.3.0-alpha2"
 
-#: Contains version information for a single checked item.
+#: Contains information for a single checked item.
 VerInfo = namedtuple("VerInfo", "path linenum string")
 
 ##==============================================================#
@@ -31,7 +31,7 @@ VerInfo = namedtuple("VerInfo", "path linenum string")
 
 class VerChecker(object):
     def __init__(self, name, root):
-        """Initializes the version checker object.
+        """Initializes the checker object.
 
         **Params**:
           - name (str) - Name associated with items checked.
@@ -45,7 +45,7 @@ class VerChecker(object):
         self._checks = []
         self._string = None
     def string(self):
-        """Returns the version string if `run()` found no inconsistencies,
+        """Returns the string if `run()` found no inconsistencies,
         otherwise None is returned. Always calls `run()`."""
         self.run(False)
         return self._string
@@ -82,10 +82,10 @@ class VerChecker(object):
                 yield (vi, c[3]) if get_updatable else vi
     def run(self, verbose=True):
         """Runs checks on all included items, reports any inconsistencies.
-        Returns version string if consistent else None."""
+        Returns string if consistent else None."""
         vprint = get_vprint(verbose)
         strings = []
-        vprint("%s Version Information:" % (self.name))
+        vprint(self.name + ":")
         for vinfo in self.iter_vinfo():
             if vinfo.string not in strings:
                 strings.append(vinfo.string)
@@ -96,13 +96,13 @@ class VerChecker(object):
         if strings:
             self._string = list(strings)[0] if 1 == len(strings) else None
             if not self._string:
-                vprint("  [WARNING] Version info differs!")
+                vprint("  [WARNING] Strings differ!")
         else:
             self._string = None
-            vprint("  [WARNING] No version info found!")
+            vprint("  [WARNING] No string info found!")
         return self._string
-    def update(self, newver):
-        """Updates all associated version strings to the given new string. Use
+    def update(self, newstr):
+        """Updates all associated strings to the given new string. Use
         caution as this will modify file content! Returns number of strings
         updated."""
         updated = 0
@@ -116,12 +116,21 @@ class VerChecker(object):
                 with open(temp, "w") as fo:
                     for num,line in enumerate(fi.readlines(), 1):
                         if num == vinfo.linenum:
-                            line = line.replace(vinfo.string, newver)
+                            line = line.replace(vinfo.string, newstr)
                         fo.write(line)
             os.remove(vinfo.path)
             os.rename(temp, vinfo.path)
             updated += 1
         return updated
+    def prompt(self):
+        """Shows the standard prompt for handling checked strings."""
+        import qprompt
+        self.run()
+        if qprompt.ask_yesno("Update string?", dft="n"):
+            newstr = qprompt.ask_str("New string")
+            if newstr:
+                self.update(newstr)
+                self.prompt()
 
 ##==============================================================#
 ## SECTION: Function Definitions                                #
@@ -140,30 +149,20 @@ def get_vprint(verbose):
         return _vprint
     return _nprint
 
-def check_basic(path, match="version", delim="=", delim2=""):
-    """Basic version check function."""
-    for num,line in enumerate(open(path).readlines()):
+def check_basic(path, match="version", delim="=", delim2="", splitnum=1, splitnum2=0):
+    """Basic check function."""
+    for num,line in enumerate(open(path).readlines(), 1):
         if line.find(match) > -1:
-            ver = line.split(delim)[1].strip()
+            vstr = line.split(delim)[splitnum].strip()
             if delim2:
-                ver = ver.split(delim2)[0].strip()
-            return VerInfo(path, num+1, ver)
-
-def show_prompt(verchk, pause=True):
-    """Shows the standard prompt for handling version numbers in a project."""
-    import qprompt
-    verchk.run()
-    if qprompt.ask_yesno("Update version?", dft="n"):
-        newver = qprompt.ask_str("New version string")
-        if newver:
-            verchk.update(newver)
-            verchk.run()
-            if pause:
-                qprompt.pause()
+                vstr = vstr.split(delim2)[splitnum2].strip()
+            return VerInfo(path, num, vstr)
 
 ##==============================================================#
 ## SECTION: Main Body                                           #
 ##==============================================================#
 
 if __name__ == '__main__':
-    pass
+    mychk = VerChecker("My Checker", __file__)
+    mychk.include(r"setup.py", match="version = ", delim='"')
+    mychk.prompt()
