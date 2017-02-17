@@ -59,7 +59,7 @@ The string can be updated in all associated files:
 mychk.update("something different!")
 --------
 
-That's the basics.
+That's the basics. Check out http://verace.readthedocs.io[the documentation] for more info.
 
 Here are some real-world examples of Verace in action:
 
@@ -71,6 +71,9 @@ A few more basic examples of Verace (all examples can be found https://github.co
 
   - https://github.com/jeffrimko/Verace/blob/master/examples/check_1.py[examples/check_1.py] - Basic version checking.
   - https://github.com/jeffrimko/Verace/blob/master/examples/check_2.py[examples/check_2.py] - Basic version checking.
+
+== Documentation
+The full documentation for this project can be found http://verace.readthedocs.io[here on Read the Docs].
 
 == FAQ
 How is **Verace** pronounced?
