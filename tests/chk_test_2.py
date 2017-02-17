@@ -34,7 +34,7 @@ class TestCase(unittest.TestCase):
         test.assertEqual(test.verchk.string(), VERSION)
 
     def test_chk_2(test):
-        expect = "{VCHKNAME} Version Information:\n  `{VERSION}` ({TESTFILE}:1)".format(**globals())
+        expect = "{VCHKNAME}:\n  `{VERSION}` ({TESTFILE}:1)".format(**globals())
         sys.stdout = StringIO()
         test.assertEqual(test.verchk.run(), VERSION)
         test.assertEqual(sys.stdout.getvalue().strip(), expect)
