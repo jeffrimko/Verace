@@ -4,17 +4,18 @@ image:http://img.shields.io/:license-mit-blue.svg["License", link="https://githu
 image:https://travis-ci.org/jeffrimko/Verace.svg?branch=master["Build Status"]
 
 == Introduction
-This project provides a Python 2.7/3.x library for creating scripts that check version strings. The main features are the following:
+This project provides a Python 2.7/3.x library to aid checking strings in files. Verace's main use case is checking that version strings are consistent in project files. The main features of this library are:
 
-  - Custom parse any project files for version strings.
-  - Easily determine if all version strings in a project are consistent.
-  - Should work on any platform without additional dependencies.
+  - Custom parse any project files for strings.
+  - Easily determine if all strings are consistent.
+  - Quickly updated tracked strings.
+  - Should work on any platform without additional dependencies; https://github.com/jeffrimko/Qprompt[Qprompt] is recommended for default prompts.
 
 == Status
-Currently, this project is **under active development**. The contents of the repository should be considered unstable during active development.
+Currently, this project is in the **development release** stage. While this project is suitable for use, please note that there may be incompatibilities in new releases.
 
 == Requirements
-Verace should run on any Python 2.x interpreter without additional dependencies.
+Verace should run on any Python 2.7/3.x interpreter without additional dependencies.
 
 == Installation
 Verace can be installed with pip using the following command: `pip install verace`
@@ -22,12 +23,43 @@ Verace can be installed with pip using the following command: `pip install verac
 Additional, Verace can be installed from source by running: `python setup.py install`
 
 == Usage
-The following is an example of basic usage:
+Start by importing Verace into your Python script:
 
-    from verace import VerChecker, show_prompt
-    VERCHK = VerChecker("MyProject", __file__)
-    VERCHK.include(r"my_file.txt")
-    show_prompt(VERCHK)
+[source,python]
+--------
+import verace
+--------
+
+Create a `VerChecker` object, name it and set the root location:
+
+[source,python]
+--------
+mychk = verace.VerChecker("My Checker", __file__)
+--------
+
+Include a file to check. If no check function is provided, `check_basic()` will be used by default. Let's look for the version string in `setup.py`:
+
+[source,python]
+--------
+mychk.include(r"lib\setup.py", match="version = ", delim='"')
+--------
+
+Get the string found by the checker:
+
+[source,python]
+--------
+print("version found = " + mychk.string())
+# version found = 0.3.0-alpha2
+--------
+
+The string can be updated in all associated files:
+
+[source,python]
+--------
+mychk.update("something different!")
+--------
+
+That's the basics but there is a lot more. Custom functions can be provided to
 
 Here are some real-world examples of Verace in action:
 
