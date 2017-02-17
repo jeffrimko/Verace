@@ -11,6 +11,7 @@ setup(
     keywords = "project files version check library",
     url = "https://github.com/jeffrimko/Verace",
     py_modules=["verace"],
+    install_requires=["qprompt>=0.8.2"],
     long_description=open("README.rst").read() if isfile("README.rst") else "",
     classifiers=[
         "Development Status :: 4 - Beta",
