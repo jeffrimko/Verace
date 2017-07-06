@@ -26,7 +26,7 @@ class TestCase(unittest.TestCase):
         with open(TESTFILE, "w") as fo:
             fo.write("version = {VERSION}\nmore text here\n".format(**globals()))
         test.verchk = VerChecker(VCHKNAME, __file__)
-        test.verchk.include(TESTFILE)
+        test.verchk.include(TESTFILE, match="version =", splits=[(" = ", 1)])
 
     def test_chk_1(test):
         test.assertEqual(test.verchk.string(), VERSION)
