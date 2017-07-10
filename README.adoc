@@ -41,7 +41,7 @@ Include a file to check. If no check function is provided, `check_basic()` will 
 
 [source,python]
 --------
-mychk.include(r"lib\setup.py", match="version = ", delim='"')
+mychk.include(r"lib\setup.py", match="version = ", splits=[('"',1)])
 --------
 
 Get the string found by the checker:
@@ -79,3 +79,7 @@ The full documentation for this project can be found http://verace.readthedocs.i
 How is **Verace** pronounced?
 
   - "ver-AH-che" - Italian word for "truthful/accurate".
+
+Is this library only for Python projects?
+
+  - Not at all! Any project can use Verace!
