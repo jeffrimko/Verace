@@ -11,6 +11,7 @@
 from __future__ import print_function
 
 import copy
+import inspect
 import os
 import os.path as op
 from collections import namedtuple
@@ -20,7 +21,7 @@ from collections import namedtuple
 ##==============================================================#
 
 #: Library version string.
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 
 #: Contains information for a single checked item.
 VerInfo = namedtuple("VerInfo", "path linenum string")
@@ -47,6 +48,7 @@ class VerChecker(object):
         self._vinfos = []
         self._string = None
         self._checks = []
+        self.debug = False
     def string(self):
         """Returns the string if `run()` found no inconsistencies,
         otherwise None is returned. Always calls `run()`."""
@@ -73,16 +75,19 @@ class VerChecker(object):
     def iter_vinfo(self, get_updatable=False):
         """Iterates over the associated VerInfo objects. Optionally returns if
         the associated file is updatable."""
+        dprint = get_vprint(self.debug)
         for c in self._checks:
             path = c.path
             if not op.isabs(path):
                 path = op.join(self.root, path)
             path = op.normpath(path)
             vinfos = c.func(path, **c.opts)
+            dprint((inspect.stack()[0][3], c, vinfos))
             if list != type(vinfos):
                 vinfos = [vinfos]
             for vi in vinfos:
-                yield (vi, c.updatable) if get_updatable else vi
+                if vi:
+                    yield (vi, c.updatable) if get_updatable else vi
     def run(self, verbose=True):
         """Runs checks on all included items, reports any inconsistencies.
         Returns string if consistent else None."""

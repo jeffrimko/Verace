@@ -1,5 +1,16 @@
 = Verace Changelog
 
+== verace-0.3.1 (2018-01-12)
+=== Release highlights
+  - Convenience updates.
+
+=== All additions and changes
+  - Invalid `VerChecker.include()` results will no longer produce errors.
+  - Added `debug` property to `VerChecker`.
+
+=== Bug fixes
+Not applicable.
+
 == verace-0.3.0 (2017-02-16)
 === Release highlights
   - Added convenience function.
