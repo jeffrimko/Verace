@@ -15,6 +15,7 @@ This class is used to create objects that will check/update strings in files:
 .. autoclass:: verace.VerChecker
     :members:
 
+
 Custom Check Functions
 ----------------------
 A function can be provided to ``VerChecker.include()``. If no explicit function is provide, the following function will be used:
@@ -24,3 +25,7 @@ A function can be provided to ``VerChecker.include()``. If no explicit function 
 Custom functions can be defined to find strings. The first argument must be the file path and the function must return either a single ``VerInfo`` object or a list of ``VerInfo`` objects:
 
 .. autodata:: verace.VerInfo
+
+Use this convenience function to iterate through the lines in a given file:
+
+.. autofunction:: verace.readlines
