@@ -20,7 +20,7 @@ else:
 ## SECTION: Global Definitions                                  #
 ##==============================================================#
 
-sys.path.append(r"..\lib")
+sys.path.insert(0, r"..\lib")
 
 ##==============================================================#
 ## SECTION: Function Definitions                                #

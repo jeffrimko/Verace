@@ -49,7 +49,7 @@ Get the string found by the checker:
 [source,python]
 --------
 print("version found = " + mychk.string())
-# version found = 0.3.1
+# version found = 0.3.2
 --------
 
 The string can be updated in all associated files:
@@ -66,11 +66,6 @@ Here are some real-world examples of Verace in action:
   - https://github.com/jeffrimko/Auxly/blob/master/_Check_Versions.py[Auxly]
   - https://github.com/jeffrimko/Qprompt/blob/master/_Check_Versions.py[Qprompt]
   - https://github.com/jeffrimko/Verace/blob/master/_Check_Versions.py[Verace (meta)]
-
-A few more basic examples of Verace (all examples can be found https://github.com/jeffrimko/Verace/tree/master/examples[here]):
-
-  - https://github.com/jeffrimko/Verace/blob/master/examples/check_1.py[examples/check_1.py] - Basic version checking.
-  - https://github.com/jeffrimko/Verace/blob/master/examples/check_2.py[examples/check_2.py] - Basic version checking.
 
 == Documentation
 The full documentation for this project can be found http://verace.readthedocs.io[here on Read the Docs].

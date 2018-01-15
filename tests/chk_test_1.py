@@ -12,7 +12,8 @@ from verace import VerChecker
 ## SECTION: Global Definitions                                  #
 ##==============================================================#
 
-TESTFILE = get_main_name(prefix="__temp-", ext=".txt")
+FILETMPL = "version = {VERSION}\nmore text here\n"
+FILENAME = get_main_name(prefix="__temp-", ext=".txt")
 VCHKNAME = get_main_name().upper()
 VERSION = "1.0.0"
 
@@ -23,22 +24,22 @@ VERSION = "1.0.0"
 class TestCase(unittest.TestCase):
 
     def setUp(test):
-        with open(TESTFILE, "w") as fo:
-            fo.write("version = {VERSION}\nmore text here\n".format(**globals()))
+        with open(FILENAME, "w") as fo:
+            fo.write(FILETMPL.format(**globals()))
         test.verchk = VerChecker(VCHKNAME, __file__)
-        test.verchk.include(TESTFILE, match="version =", splits=[(" = ", 1)])
+        test.verchk.include(FILENAME, match="version =", splits=[(" = ", 1)])
 
-    def test_chk_1(test):
+    def test_correct_string(test):
         test.assertEqual(test.verchk.string(), VERSION)
 
-    def test_chk_2(test):
-        expect = "{VCHKNAME}:\n  `{VERSION}` ({TESTFILE}:1)".format(**globals())
+    def test_output_format(test):
+        expect = "{VCHKNAME}:\n  `{VERSION}` ({FILENAME}:1)".format(**globals())
         sys.stdout = StringIO()
         test.assertEqual(test.verchk.run(), VERSION)
         test.assertEqual(sys.stdout.getvalue().strip(), expect)
 
     def tearDown(test):
-        remove(TESTFILE)
+        remove(FILENAME)
 
 ##==============================================================#
 ## SECTION: Main Body                                           #

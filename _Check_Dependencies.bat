@@ -21,6 +21,13 @@ call:ChkDep^
     "2.7/3.x"^
     python -V
 
+call:ChkDep^
+    "Qprompt"^
+    "Python library for quick CLI user prompts, input, and menus."^
+    "github.com/jeffrimko/Qprompt"^
+    "latest"^
+    python -c "import qprompt"
+
 pause
 exit /b 0
 

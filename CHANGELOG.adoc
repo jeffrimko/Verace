@@ -1,5 +1,16 @@
 = Verace Changelog
 
+== verace1.3.2 (2018-01-14)
+=== Release highlights
+  - Minor tweaks.
+
+=== All additions and changes
+  - Added `readlines()` convenience function.
+  - The `VerChecker.iter_vinfo()` method now iterates sorted on path then line number.
+
+=== Bug fixes
+  - Fixed issue with `check_basic()` not closing opened files.
+
 == verace-0.3.1 (2018-01-12)
 === Release highlights
   - Convenience updates.
