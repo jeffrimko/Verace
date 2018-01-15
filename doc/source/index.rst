@@ -6,7 +6,7 @@
 Verace
 ======
 
-This is the main documentation for Verace, a Python library to aid checking strings in files.
+This is the main documentation for Verace (`GitHub <https://github.com/jeffrimko/Verace>`_, `PyPI <https://pypi.python.org/pypi/verace>`_), a Python library to aid checking strings in files.
 
 VerChecker
 ----------
