@@ -1,0 +1,2 @@
+  - filetmpl: "# some text\n## foo-bar-{VERSION}\nmore text here\n"
+    version: "1.2.3"
