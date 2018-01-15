@@ -1,4 +1,0 @@
-version = 0.1.0
-another = 0.1.0
-onemore : 0.1.0
-diffver = v0.1.1
