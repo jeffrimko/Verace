@@ -21,7 +21,7 @@ from collections import namedtuple
 ##==============================================================#
 
 #: Library version string.
-__version__ = "0.3.1"
+__version__ = "0.3.2"
 
 #: Contains information for a single checked item.
 VerInfo = namedtuple("VerInfo", "path linenum string")
@@ -85,7 +85,7 @@ class VerChecker(object):
             dprint((inspect.stack()[0][3], c, vinfos))
             if list != type(vinfos):
                 vinfos = [vinfos]
-            for vi in vinfos:
+            for vi in sorted(vinfos, key=lambda v: (v.path, v.linenum)):
                 if vi:
                     yield (vi, c.updatable) if get_updatable else vi
     def run(self, verbose=True):
@@ -104,10 +104,10 @@ class VerChecker(object):
         if strings:
             self._string = list(strings)[0] if 1 == len(strings) else None
             if not self._string:
-                vprint("  [WARNING] Strings differ!")
+                vprint("[WARNING] Strings differ!")
         else:
             self._string = None
-            vprint("  [WARNING] No string info found!")
+            vprint("[WARNING] No string info found!")
         return self._string
     def update(self, newstr):
         """Updates all associated strings to the given new string. Use
@@ -157,18 +157,30 @@ def get_vprint(verbose):
         return _vprint
     return _nprint
 
-def check_basic(path, match="version", splits=None):
+def readlines(fpath):
+    """Generator that reads the file at the given path line by line yielding
+    (number,text) for each."""
+    with open(fpath) as fi:
+        for num,line in enumerate(fi.readlines(), 1):
+            yield num,line
+
+def check_basic(path, match="version", splits=None, single=True):
     """Basic check function. Iterates through files lines until the `match`
     string is found. The matching line will be split using the list of
-    (characters,index) tuples/lists from `splits`. **NOTE**: `splits` must be a
+    (characters,index) tuples/lists from `splits`. Can either return a single
+    (first) result or all results in the file. **NOTE**: `splits` must be a
     list of tuples/lists!"""
     splits = splits or []
-    for num,line in enumerate(open(path).readlines(), 1):
+    vinfos = []
+    for num,line in readlines(path):
         if line.find(match) > -1:
             vstr = line
             for char,indx in splits:
                 vstr = vstr.split(char)[indx].strip()
-            return VerInfo(path, num, vstr)
+            vinfos.append(VerInfo(path, num, vstr))
+    if single and len(vinfos) > 1:
+        return vinfos[0]
+    return vinfos
 
 ##==============================================================#
 ## SECTION: Main Body                                           #
