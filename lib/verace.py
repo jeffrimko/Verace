@@ -45,7 +45,6 @@ class VerChecker(object):
         if op.isfile(root):
             root = op.dirname(root)
         self.root = op.abspath(root)
-        self._vinfos = []
         self._string = None
         self._checks = []
         self.debug = False
@@ -76,6 +75,7 @@ class VerChecker(object):
         """Iterates over the associated VerInfo objects. Optionally returns if
         the associated file is updatable."""
         dprint = get_vprint(self.debug)
+        vlist = [] # Holds (vinfo,updatable) items.
         for c in self._checks:
             path = c.path
             if not op.isabs(path):
@@ -85,9 +85,11 @@ class VerChecker(object):
             dprint((inspect.stack()[0][3], c, vinfos))
             if list != type(vinfos):
                 vinfos = [vinfos]
-            for vi in sorted(vinfos, key=lambda v: (v.path, v.linenum)):
-                if vi:
-                    yield (vi, c.updatable) if get_updatable else vi
+            for v in vinfos:
+                vlist.append((v,c.updatable))
+        for vu in sorted(vlist, key=lambda i: (i[0].path, i[0].linenum)):
+            if vu:
+                yield vu if get_updatable else vu[0]
     def run(self, verbose=True):
         """Runs checks on all included items, reports any inconsistencies.
         Returns string if consistent else None."""
