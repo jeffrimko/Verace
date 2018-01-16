@@ -21,7 +21,7 @@ from collections import namedtuple
 ##==============================================================#
 
 #: Library version string.
-__version__ = "0.3.2"
+__version__ = "0.4.0"
 
 #: Contains information for a single checked item.
 VerInfo = namedtuple("VerInfo", "path linenum string")
@@ -48,6 +48,42 @@ class VerChecker(object):
         self._string = None
         self._checks = []
         self.debug = False
+    def _run_check(self, c):
+        """Runs a single VerCheck and returns a list of (VerInfo,updatable)
+        tuples."""
+        dprint = get_vprint(self.debug)
+        # Setup file path.
+        path = c.path
+        if not op.isabs(path):
+            path = op.join(self.root, path)
+        path = op.normpath(path)
+        # Setup function and function type.
+        if type(c.func) in [list, tuple]: func,ftyp = c.func
+        else: func,ftyp = (c.func, "file")
+        if (not func) or (not hasattr(func, "__call__")):
+            func = check_basic
+        # Run the function over the file and collect VerInfo objects.
+        vinfos = []
+        if "file" == ftyp:
+            v = func(path, **c.opts)
+            dprint((inspect.stack()[0][3], c, v))
+            if list != type(v): v = [v]
+            vinfos += v
+        elif "line" == ftyp:
+            for num,line in readlines(path):
+                string = func(line, **c.opts)
+                if string:
+                    vinfos.append(VerInfo(path, num, string))
+        return [(v, c.updatable) for v in vinfos if v]
+    def _iter_vinfo(self, get_updatable=False):
+        """Iterates over the associated VerInfo objects. Optionally returns if
+        the associated file is updatable."""
+        vlist = [] # Holds (VerInfo,updatable) items.
+        for c in self._checks:
+            vlist += self._run_check(c)
+        for vu in sorted(vlist, key=lambda i: (i[0].path, i[0].linenum)):
+            if vu:
+                yield vu if get_updatable else vu[0]
     def string(self):
         """Returns the string if `run()` found no inconsistencies,
         otherwise None is returned. Always calls `run()`."""
@@ -58,8 +94,12 @@ class VerChecker(object):
 
         **Params**:
           - path (str) - Path to a file to check.
-          - func (function) - Function that performs check will be passed
-            `path` and `opts`. Must return a VerInfo (single or list).
+          - func (function|(tuple,str)) - Either a (func,type) tuple or a
+            function (type defaults to 'file'). Valid type values are
+            'file|line'. The type controls whether the file path or individual
+            lines will be passed to the function. A file function may return
+            either single VerInfo or a list of VerInfos. A line function may
+            return a string.
           - opts (dict) - Options to pass to the check function. Any additional
             keyword args will be included.
           - updatable (bool) - If true, string can be updated using `update()`.
@@ -67,36 +107,15 @@ class VerChecker(object):
         if not opts:
             opts = {}
         opts.update(copy.deepcopy(kwargs))
-        if (not func) or (not hasattr(func, "__call__")):
-            func = check_basic
         c = VerCheck(path, func, copy.deepcopy(opts), updatable)
         self._checks.append(c)
-    def iter_vinfo(self, get_updatable=False):
-        """Iterates over the associated VerInfo objects. Optionally returns if
-        the associated file is updatable."""
-        dprint = get_vprint(self.debug)
-        vlist = [] # Holds (vinfo,updatable) items.
-        for c in self._checks:
-            path = c.path
-            if not op.isabs(path):
-                path = op.join(self.root, path)
-            path = op.normpath(path)
-            vinfos = c.func(path, **c.opts)
-            dprint((inspect.stack()[0][3], c, vinfos))
-            if list != type(vinfos):
-                vinfos = [vinfos]
-            for v in vinfos:
-                vlist.append((v,c.updatable))
-        for vu in sorted(vlist, key=lambda i: (i[0].path, i[0].linenum)):
-            if vu:
-                yield vu if get_updatable else vu[0]
     def run(self, verbose=True):
         """Runs checks on all included items, reports any inconsistencies.
         Returns string if consistent else None."""
         vprint = get_vprint(verbose)
         strings = []
         vprint(self.name + ":")
-        for vinfo in self.iter_vinfo():
+        for vinfo in self._iter_vinfo():
             if vinfo.string not in strings:
                 strings.append(vinfo.string)
             vprint("  `%s` (%s:%u)" % (
@@ -116,7 +135,7 @@ class VerChecker(object):
         caution as this will modify file content! Returns number of strings
         updated."""
         updated = 0
-        for vinfo,updatable in self.iter_vinfo(get_updatable=True):
+        for vinfo,updatable in self._iter_vinfo(get_updatable=True):
             if not updatable:
                 continue
             with open(vinfo.path) as fi:

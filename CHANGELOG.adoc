@@ -1,5 +1,15 @@
 = Verace Changelog
 
+== verace-0.4.0 (2018-01-15)
+=== Release highlights
+  - Non-breaking functional updates.
+
+=== All additions and changes
+  - Added support for line functions.
+
+=== Bug fixes
+  - Minor fix for functions that return no `VerInfo`.
+
 == verace-0.3.2 (2018-01-14)
 === Release highlights
   - Minor tweaks.

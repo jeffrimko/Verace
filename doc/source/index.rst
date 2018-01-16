@@ -18,14 +18,24 @@ This class is used to create objects that will check/update strings in files:
 
 Custom Check Functions
 ----------------------
-A function can be provided to ``VerChecker.include()``. If no explicit function is provide, the following function will be used:
+A function can be provided to ``VerChecker.include()``. The function will be used to parse the file for the target string.
+
+If a tuple/list is provided as as the ``func`` argument, the first value must be a function and the second value must be the string ``'file'`` (default) or ``'line'``.
+
+If no explicit function is provide, the following file function will be used:
 
 .. autofunction:: verace.check_basic
 
-Custom functions can be defined to find strings. The first argument must be the file path and the function must return either a single ``VerInfo`` object or a list of ``VerInfo`` objects:
+File Functions
+~~~~~~~~~~~~~~
+File functions must handle the string search through the entire target file. The first argument must be the file path and the function must return either a single ``VerInfo`` object or a list of ``VerInfo`` objects:
 
 .. autodata:: verace.VerInfo
 
 Use this convenience function to iterate through the lines in a given file:
 
 .. autofunction:: verace.readlines
+
+Line Functions
+~~~~~~~~~~~~~~
+Line functions will be provided each line from the file one at a time. If the target string is found, simply return it. Otherwise return None (default return).
