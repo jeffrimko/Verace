@@ -15,7 +15,6 @@ This class is used to create objects that will check/update strings in files:
 .. autoclass:: verace.VerChecker
     :members:
 
-
 Custom Check Functions
 ----------------------
 A function can be provided to ``VerChecker.include()``. The function will be used to parse the file for the target string.
