@@ -47,6 +47,7 @@ class VerChecker(object):
         self.root = op.abspath(root)
         self._string = None
         self._checks = []
+        self._vinfos = []
         self.debug = False
     def _run_check(self, c):
         """Runs a single VerCheck and returns a list of (VerInfo,updatable)
@@ -74,14 +75,16 @@ class VerChecker(object):
                 string = func(line, **c.opts)
                 if string:
                     vinfos.append(VerInfo(path, num, string))
+        self._vinfos += vinfos
         return [(v, c.updatable) for v in vinfos if v]
     def _iter_vinfo(self, get_updatable=False):
         """Iterates over the associated VerInfo objects. Optionally returns if
         the associated file is updatable."""
-        vlist = [] # Holds (VerInfo,updatable) items.
+        vulist = [] # Holds (VerInfo,updatable) items.
+        self._vinfos = []
         for c in self._checks:
-            vlist += self._run_check(c)
-        for vu in sorted(vlist, key=lambda i: (i[0].path, i[0].linenum)):
+            vulist += self._run_check(c)
+        for vu in sorted(vulist, key=lambda i: (i[0].path, i[0].linenum)):
             if vu:
                 yield vu if get_updatable else vu[0]
     def string(self):
@@ -153,8 +156,23 @@ class VerChecker(object):
         return updated
     def prompt(self):
         """Shows the standard prompt for handling checked strings."""
-        import qprompt
+        try:
+            import qprompt
+        except:
+            print("The `qprompt` library is needed for this functionality!")
+            return
         self.run()
+        if not self._checks:
+            qprompt.pause()
+            return
+        ns = len(self._vinfos)
+        nu = len({v.string for v in self._vinfos})
+        nf = len({v.path for v in self._vinfos})
+        ss = "string" + ("s" if ns != 1 else "")
+        sf = "file" + ("s" if nf != 1 else "")
+        msg = "Found %u %s (%u unique) in %u %s." % (
+                ns, ss, nu, nf, sf)
+        qprompt.alert(msg)
         if qprompt.ask_yesno("Update string?", dft="n"):
             newstr = qprompt.ask_str("New string")
             if newstr:
