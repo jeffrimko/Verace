@@ -49,7 +49,7 @@ Get the string found by the checker:
 [source,python]
 --------
 print("version found = " + mychk.string())
-# version found = 0.4.0
+# version found = 0.4.1
 --------
 
 The string can be updated in all associated files:
@@ -70,7 +70,7 @@ Here are some real-world examples of Verace in action:
 == Documentation
 The full documentation for this project can be found http://verace.readthedocs.io[here on Read the Docs].
 
-== FAQ
+== Q&A
 How is **Verace** pronounced?
 
   - "ver-AH-che" - Italian word for "truthful/accurate".
