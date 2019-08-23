@@ -1,5 +1,15 @@
 = Verace Changelog
 
+== verace-0.4.1 (2018-01-23)
+=== Release highlights
+  - Minor functionality changes.
+
+=== All additions and changes
+  - Added additional info to `qprompt()` output.
+
+=== Bug fixes
+Not applicable.
+
 == verace-0.4.0 (2018-01-15)
 === Release highlights
   - Non-breaking functional updates.

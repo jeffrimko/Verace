@@ -29,3 +29,4 @@ if __name__ == '__main__':
         generate_readme()
         subprocess.call("python setup.py sdist upload", shell=True)
         cleanup_readme()
+    qprompt.pause()
